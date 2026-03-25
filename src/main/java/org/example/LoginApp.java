@@ -1,15 +1,17 @@
 package org.example;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class LoginApp extends Application {
 
     private VBox vbox;
     private TextField txUsuario;
@@ -23,36 +25,36 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
 
         initComponents();
-        initListeners();
+        initListener();
 
         String css = this.getClass().getResource("/style.css")
                 .toExternalForm();
+        Image iconImage = new Image(
+                getClass().getResourceAsStream("/icone.png"));
 
         Scene scene = new Scene(vbox);
         scene.getStylesheets().add(css);
+        stage.setResizable(false);
         stage.setScene(scene);
-        stage.setTitle("AppTeste");
+        stage.getIcons().add(iconImage);
+        stage.setTitle("LoginApp");
         initLayout();
         stage.show();
-        Main.stage = stage;
+        LoginApp.stage = stage;
     }
 
     public void initComponents() {
-
         vbox = new VBox();
         vbox.getStyleClass().add("login_custom");
 
-        // Campo de usuário
         txUsuario = new TextField();
-        txUsuario.setPromptText("Nome de usuário...");
+        txUsuario.setPromptText("Digite nome de usuário...");
         txUsuario.getStyleClass().add("text_custom");
 
-        // Campo de senha
         txSenha = new PasswordField();
-        txSenha.setPromptText("Senha de usuário...");
+        txSenha.setPromptText("Digite a senha...");
         txSenha.getStyleClass().add("text_custom");
 
-        // Campo dos botões
         btEnter = new Button();
         btEnter.setText("Enter");
         btEnter.getStyleClass().add("button_enter");
@@ -61,40 +63,53 @@ public class Main extends Application {
         btSair.setText("Sair");
         btSair.getStyleClass().add("button_exit");
 
-
-
-        // Inserindo os elementos no painel
-        vbox.getChildren().addAll(txUsuario,
-                txSenha, btEnter, btSair);
+        vbox.getChildren().addAll(txUsuario, txSenha, btEnter, btSair);
     }
 
-    public void initListeners() {
+    public void initLayout() {
 
-        btSair.setOnAction(new EventHandler<ActionEvent>() {
+        vbox.setPrefSize(400, 300);
+        vbox.setSpacing(20);
+        vbox.setAlignment(Pos.CENTER);
 
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                fecharApp();
-            }
+        txUsuario.setMaxWidth(150);
+        txSenha.setMaxWidth(150);
+
+        btEnter.setMaxWidth(50);
+        btSair.setMaxWidth(50);
+    }
+
+    public void initListener() {
+        btSair.setCancelButton(true); // Apertar ESC faz com que a tela feche
+        btSair.setOnAction(e -> {
+            fecharApp();
         });
-        btEnter.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                if (txUsuario.getText().equals("entaoth")
-                        && txSenha.getText().equals("senha")) {
-                    // Quero que abra uma nova tela
-                    Main.stage.close();
-                    // Quando a nova tela abrir, essa vai se fechar
-                    // está funcionando
-                } else {
-                    alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("ERROR!");
-                    alert.setHeaderText("Usuário ou Senha incorreta!");
+        btEnter.setDefaultButton(true); // Apertar Enter também funciona como botão
+        // Usuario e Senha de teste
+        btEnter.setOnAction(e -> {
+              if (txUsuario.getText().equals("entaoth")
+                      && txSenha.getText().equals("senha")) {
+                    // Tela nova vai abrir
+                    LoginApp.stage.close();
+                    // Quando a tela abrir, a de login irá fechar
+              } else if (txUsuario.getText().isEmpty()
+                      && txSenha.getText().isEmpty()) {
+                    // Alerta
+
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Atenção!");
+                    alert.setHeaderText("Usuário ou Senha não podem estar vazios.");
                     alert.setContentText("Tente novamente.");
                     alert.showAndWait();
-                    // funcionando
-                }
-            }
+              } else {
+                    // Error
+
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("ERROR");
+                    alert.setHeaderText("Usuário ou Senha estão incorretos.");
+                    alert.setContentText("Verifique e tente novamente.");
+                    alert.showAndWait();
+              }
         });
     }
 
@@ -102,19 +117,6 @@ public class Main extends Application {
         System.exit(0);
     }
 
-    public void initLayout() {
-
-        vbox.setSpacing(20);
-        vbox.setAlignment(Pos.CENTER);
-        vbox.setPrefSize(400, 300);
-
-        txUsuario.setMaxWidth(150);
-
-        txSenha.setMaxWidth(150);
-
-        btEnter.setMaxWidth(50);
-
-    }
 
     public static Stage getStage() {
         return stage;

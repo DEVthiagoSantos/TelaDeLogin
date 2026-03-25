@@ -1,0 +1,30 @@
+.login_custom {
+       -fx-background-color: linear-gradient(from 0% 0% to 100% 100%,
+       black 0%, silver 100%);
+}
+.text_custom {
+       -fx-background-radius: 5;
+       -fx-prompt-text-fill: gray;
+}
+.button_enter {
+       -fx-background-radius: 5;
+       -fx-background-color: gray;
+       -fx-text-fill: white;
+}
+
+.button_exit {
+       -fx-background-radius: 5;
+       -fx-background-color: red;
+       -fx-text-fill: white;
+}
+
+.button_enter:hover, .button_exit:hover {
+       -fx-scale-x: 1.1;
+       -fx-scale-y: 1.1;
+       -fx-cursor: hand;
+}
+
+.negrito {
+       -fx-font-weight: bold;
+       -fx-text-fill: white;
+}

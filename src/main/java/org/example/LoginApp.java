@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.view.TabelaApp;
 
 public class LoginApp extends Application {
 
@@ -89,26 +90,31 @@ public class LoginApp extends Application {
         btEnter.setOnAction(e -> {
               if (txUsuario.getText().equals("entaoth")
                       && txSenha.getText().equals("senha")) {
-                    // Tela nova vai abrir
-                    LoginApp.stage.close();
-                    // Quando a tela abrir, a de login irá fechar
+
+                  try {
+                      new TabelaApp().start(new Stage());
+                  } catch (Exception ex) {
+                      ex.printStackTrace();
+                  }
+                  LoginApp.stage.close();
+                  // Quando a tela abrir, a de login irá fechar
               } else if (txUsuario.getText().isEmpty()
                       && txSenha.getText().isEmpty()) {
                     // Alerta
 
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Atenção!");
-                    alert.setHeaderText("Usuário ou Senha não podem estar vazios.");
-                    alert.setContentText("Tente novamente.");
-                    alert.showAndWait();
+                  alert = new Alert(Alert.AlertType.INFORMATION);
+                  alert.setTitle("Atenção!");
+                  alert.setHeaderText("Usuário ou Senha não podem estar vazios.");
+                  alert.setContentText("Tente novamente.");
+                  alert.showAndWait();
               } else {
                     // Error
 
-                    alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("ERROR");
-                    alert.setHeaderText("Usuário ou Senha estão incorretos.");
-                    alert.setContentText("Verifique e tente novamente.");
-                    alert.showAndWait();
+                  alert = new Alert(Alert.AlertType.ERROR);
+                  alert.setTitle("ERROR");
+                  alert.setHeaderText("Usuário ou Senha estão incorretos.");
+                  alert.setContentText("Verifique e tente novamente.");
+                  alert.showAndWait();
               }
         });
     }

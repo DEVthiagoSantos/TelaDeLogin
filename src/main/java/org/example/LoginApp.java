@@ -10,7 +10,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.example.view.TabelaApp;
+import org.example.controller.TabelaController;
+import org.example.view.TabelaView;
 
 public class LoginApp extends Application {
 
@@ -91,12 +92,9 @@ public class LoginApp extends Application {
               if (txUsuario.getText().equals("entaoth")
                       && txSenha.getText().equals("senha")) {
 
-                  try {
-                      new TabelaApp().start(new Stage());
-                  } catch (Exception ex) {
-                      ex.printStackTrace();
-                  }
-                  LoginApp.stage.close();
+                  TabelaView view = new TabelaView();
+                  new TabelaController(view);
+                  stage.setScene(view.getScene());
                   // Quando a tela abrir, a de login irá fechar
               } else if (txUsuario.getText().isEmpty()
                       && txSenha.getText().isEmpty()) {

@@ -11,7 +11,7 @@
        -fx-background-radius: 5;
        -fx-prompt-text-fill: gray;
 }
-.button_enter {
+.button_padrao {
        -fx-background-radius: 5;
        -fx-background-color: gray;
        -fx-text-fill: white;
@@ -23,7 +23,7 @@
        -fx-text-fill: white;
 }
 
-.button_enter:hover, .button_exit:hover {
+.button_padrao:hover, .button_exit:hover {
        -fx-scale-x: 1.1;
        -fx-scale-y: 1.1;
        -fx-cursor: hand;

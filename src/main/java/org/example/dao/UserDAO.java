@@ -13,11 +13,12 @@ import java.util.List;
 public class UserDAO {
 
     public PageResponse<User> list(Connection conn,
+                                   String userName,
                                    int page, int limit) throws SQLException {
 
         int offset = Math.max(0, (page - 1) * limit);
 
-        int totalItems = countItens(conn);
+        int totalItems = countItens(conn, userName);
 
         int totalPages = (int) Math.ceil((double) totalItems / limit);
 
@@ -25,13 +26,16 @@ public class UserDAO {
                 SELECT id_user,
                        user_name,
                        email
-                FROM users LIMIT ? OFFSET ?""";
+                FROM users
+                WHERE user_name LIKE ?
+                LIMIT ? OFFSET ?""";
         List<User> lista = new ArrayList<>();
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, limit);
-            stmt.setInt(2, offset);
+            stmt.setString(1, "%"+userName+"%");
+            stmt.setInt(2, limit);
+            stmt.setInt(3, offset);
 
             try (ResultSet rs = stmt.executeQuery()) {
 
@@ -54,11 +58,17 @@ public class UserDAO {
         );
     }
 
-    public int countItens(Connection conn) throws SQLException {
+    public int countItens(Connection conn
+            , String userName) throws SQLException {
 
-        String sql = "SELECT COUNT(*) FROM users";
+        String sql = """
+                SELECT COUNT(*)
+                FROM users
+                WHERE user_name LIKE ?""";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, "%"+userName+"%");
 
             try (ResultSet rs = stmt.executeQuery()) {
 

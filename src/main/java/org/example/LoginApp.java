@@ -58,7 +58,7 @@ public class LoginApp extends Application {
 
         btEnter = new Button();
         btEnter.setText("Enter");
-        btEnter.getStyleClass().add("button_enter");
+        btEnter.getStyleClass().add("button_padrao");
 
         btSair = new Button();
         btSair.setText("Sair");

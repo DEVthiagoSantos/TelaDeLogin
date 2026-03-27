@@ -12,10 +12,11 @@ public class UserService {
 
     private static UserDAO userDAO = new UserDAO();
 
-    public PageResponse<User> list(int page, int limit) throws SQLException {
+    public PageResponse<User> list(String userName,
+                                   int page, int limit) throws SQLException {
 
         Connection conn = ConnectionFactory.connection();
 
-        return userDAO.list(conn, page, limit);
+        return userDAO.list(conn, userName, page, limit);
     }
 }

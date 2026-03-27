@@ -5,10 +5,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -20,9 +21,13 @@ import java.sql.SQLException;
 
 public class TabelaApp extends Application {
 
+    private int currentPage = 1;
+    private final int LIMIT_ITEMS = 10;
+
     private BorderPane borderPane;
     private HBox hBox;
-    private Button btListar;
+    private TextField txPesquisa;
+    private Button btProximo, btAnterior;
 
     private TableView<User> table = new TableView();
 
@@ -41,16 +46,23 @@ public class TabelaApp extends Application {
         userService = new UserService();
 
         initComponents();
-        initData();
+        carregarDados();
         initListeners();
+
+        /* Irei corrigir o erro ao listar nomes
+        * e também adicionar o icone*/
 
         String css = this.getClass().getResource("/style.css")
                 .toExternalForm();
+
+        Image imgIcon = new Image(getClass()
+                .getResourceAsStream("/icone.png"));
 
         Scene scene = new Scene(borderPane);
         scene.getStylesheets().add(css);
         initLayout();
         stage.setScene(scene);
+        stage.getIcons().add(imgIcon);
         stage.setTitle("Tabela de Usuários");
         stage.show();
 
@@ -62,9 +74,9 @@ public class TabelaApp extends Application {
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.getStyleClass().add("hbox_custom");
 
-        btListar = new Button();
-        btListar.setText("Listar");
-        btListar.getStyleClass().add("button_enter");
+        txPesquisa = new TextField();
+        txPesquisa.setPromptText("Pesquisar por nome...");
+        txPesquisa.getStyleClass().add("text_custom");
 
         tbUserName = new TableColumn("Usuário");
         tbUserName.setCellValueFactory(
@@ -78,10 +90,20 @@ public class TabelaApp extends Application {
         tbIdUser.setCellValueFactory(
                 new PropertyValueFactory<>("idUser"));
 
+        btProximo = new Button();
+        btProximo.setText("Proximo");
+        btProximo.getStyleClass().add("button_padrao");
+
+        btAnterior = new Button();
+        btAnterior.setText("Anterior");
+        btAnterior.setDisable(true);
+        btAnterior.getStyleClass().add("button_padrao");
+
+        hBox.getChildren().addAll(txPesquisa, btProximo, btAnterior);
+
         table.setItems(data);
         table.getColumns().addAll(tbIdUser, tbUserName, tbEmail);
 
-        hBox.getChildren().add(btListar);
 
         borderPane = new BorderPane();
         borderPane.setTop(hBox);
@@ -90,32 +112,75 @@ public class TabelaApp extends Application {
 
     public void initData() throws SQLException {
 
-        PageResponse<User> response = userService.list(1, 10);
+        // Page e Limite de Itens
+        PageResponse<User> response
+                = userService.list(txPesquisa.getText(),
+                        currentPage, LIMIT_ITEMS);
 
         data.setAll(response.getData());
+        btAnterior.setDisable(currentPage <= 1);
+        btProximo.setDisable(currentPage >= response.getTotalPages());
     }
 
     public void initLayout() {
 
-        btListar.setLayoutX(100);
-        btListar.setLayoutY(60);
-
         table.setPrefHeight(300);
 
+        btProximo.setMaxSize(60, 10);
+        btAnterior.setMaxSize(60, 10);
 
-        hBox.setPrefSize(80, 70);
+        hBox.setSpacing(15);
+        hBox.setPrefSize(60, 50);
 
         borderPane.setPrefSize(500, 400);
     }
 
-    public void initListeners() {
-        btListar.setOnAction(e -> {
-            try {
-                initData();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
+    private ObservableList<User> findUsers() {
+
+        ObservableList<User> usuariosEncontrados
+                = FXCollections.observableArrayList();
+
+        for (User users : data) {
+
+            if (users.getUserName().contains(txPesquisa.getText())
+                    || users.getEmail().contains(txPesquisa.getText())) {
+                usuariosEncontrados.add(users);
             }
+        }
+
+        return usuariosEncontrados;
+    }
+
+    public void initListeners() {
+
+        txPesquisa.textProperty()
+                .addListener((observable, oldValue, newValue) ->{
+                    currentPage = 1;
+                    carregarDados();
+                });
+
+        btProximo.setOnAction(e -> {
+            currentPage++;
+            carregarDados();
         });
+
+        btAnterior.setOnAction(e -> {
+            currentPage--;
+            carregarDados();
+        });
+    }
+
+    public void carregarDados() {
+
+        try {
+            initData();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("ATENÇÃO!");
+            alert.setHeaderText("Houve um pequeno problema com a tabela");
+            alert.setContentText("Tente novamente mais tarde.");
+        }
     }
 
     public static void main(String[] args) {

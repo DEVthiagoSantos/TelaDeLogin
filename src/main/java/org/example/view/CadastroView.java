@@ -9,10 +9,11 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.controller.LoginController;
+import org.example.exceptions.AppException;
 
 import javax.swing.text.Position;
 
-public class CadastroView extends Application {
+public class CadastroView {
 
     private VBox vBox;
     private TextField txUsuario = new TextField();
@@ -20,26 +21,18 @@ public class CadastroView extends Application {
     private Button btCadastrar = new Button("Cadastrar");
     private Button btSair = new Button("Sair");
 
-    private static Stage stage;
+    private Stage stage;
 
-    @Override
-    public void start(Stage stage) throws Exception {
+    public void show() throws AppException {
 
         initComponents();
 
-        String css = this.getClass().getResource("/style.css")
-                .toExternalForm();
-        Image imgIcon = new Image(
-                getClass().getResourceAsStream("/icone.png"));
-
         Scene scene = new Scene(vBox);
-        scene.getStylesheets().add(css);
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.setTitle("Tela de Cadastro");
-        stage.getIcons().add(imgIcon);
-        stage.show();
-        CadastroView.stage = stage;
+        stage = View.show(scene,
+                "CadastroView",
+                false);
+
+
     }
 
     public void initComponents() {

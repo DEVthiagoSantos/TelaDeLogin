@@ -10,10 +10,8 @@ public class MainApp extends Application {
 
     LoginView view = new LoginView();
 
-    private Stage stage;
-
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
 
         Image imgIcon = new Image(
                 getClass().getResourceAsStream("/icone.png"));
@@ -24,10 +22,6 @@ public class MainApp extends Application {
         stage.setTitle("TableApp");
         stage.getIcons().add(imgIcon);
         stage.show();
-    }
-
-    public Stage getStage() {
-        return stage;
     }
 
     public static void main(String[] args) {

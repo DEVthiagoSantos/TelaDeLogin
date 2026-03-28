@@ -6,8 +6,6 @@ import org.example.exceptions.*;
 import org.example.service.UserService;
 import org.example.view.CadastroView;
 
-import java.sql.SQLException;
-
 public class CadastroController {
 
     private final CadastroView view;
@@ -51,8 +49,6 @@ public class CadastroController {
                                 validation.getMessage());
 
                 } catch (DatabaseException ex) {
-
-                    ex.printStackTrace();
 
                     alertMap(Alert.AlertType.INFORMATION,
                             "ATENÇÃO",

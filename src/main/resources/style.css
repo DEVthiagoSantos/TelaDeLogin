@@ -4,16 +4,29 @@
 }
 
 .hbox_custom {
-       -fx-background-color: silver;
+       -fx-background-color: #A9A9A9;
 }
 
 .text_custom {
        -fx-background-radius: 5;
        -fx-prompt-text-fill: gray;
 }
+
+.text_label {
+       -fx-text-fill: white;
+       -fx-font-weight: bold;
+       -fx-underline: true;
+}
+
 .button_padrao {
        -fx-background-radius: 5;
        -fx-background-color: gray;
+       -fx-text-fill: white;
+}
+
+.button_update {
+       -fx-background-radius: 5;
+       -fx-background-color: #696969;
        -fx-text-fill: white;
 }
 
@@ -23,7 +36,7 @@
        -fx-text-fill: white;
 }
 
-.button_padrao:hover, .button_exit:hover {
+.button_padrao:hover, .button_update:hover, .button_exit:hover {
        -fx-scale-x: 1.1;
        -fx-scale-y: 1.1;
        -fx-cursor: hand;

@@ -2,10 +2,7 @@ package org.example.view;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -15,6 +12,7 @@ public class TabelaView {
 
     private BorderPane root = new BorderPane();
     private TextField txPesquisa = new TextField();
+    private Label numPages = new Label("1");
     private TableView<User> table = new TableView<>();
     private Button btProximo = new Button(">>");
     private Button btAnterior = new Button("<<");
@@ -32,7 +30,7 @@ public class TabelaView {
         boxPesquisa.setSpacing(15);
         boxPesquisa.setPrefSize(60, 50);
 
-        HBox boxBotoes = new HBox(btAnterior, btProximo);
+        HBox boxBotoes = new HBox(btAnterior, numPages, btProximo);
         boxBotoes.setAlignment(Pos.CENTER);
         boxBotoes.getStyleClass().add("hbox_custom");
         boxBotoes.setSpacing(15);
@@ -86,6 +84,14 @@ public class TabelaView {
         Scene scene = new Scene(root, 500, 400);
         scene.getStylesheets().add(css);
         return scene;
+    }
+
+    public Label getNumPages() {
+        return numPages;
+    }
+
+    public void setNumPages(Label numPages) {
+        this.numPages = numPages;
     }
 
     public BorderPane getRoot() {

@@ -12,6 +12,25 @@ import java.util.List;
 
 public class UserDAO {
 
+
+    public void createUser(Connection conn,
+                           String userName,
+                           String email) throws SQLException {
+
+        String sql = """
+                INSERT INTO users
+                (user_name, email)
+                VALUES
+                (?, ?)""";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, userName);
+            stmt.setString(2, email);
+            stmt.executeUpdate();
+        }
+    }
+
     public PageResponse<User> list(Connection conn,
                                    String userName,
                                    int page, int limit) throws SQLException {

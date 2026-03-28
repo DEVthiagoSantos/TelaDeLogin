@@ -7,7 +7,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import org.example.model.User;
@@ -17,20 +16,32 @@ public class TabelaView {
     private BorderPane root = new BorderPane();
     private TextField txPesquisa = new TextField();
     private TableView<User> table = new TableView<>();
-    private Button btProximo = new Button("Proximo");
-    private Button btAnterior = new Button("Anterior");
+    private Button btProximo = new Button(">>");
+    private Button btAnterior = new Button("<<");
+    private Button btCadastrar = new Button("Cadastrar");
     private TableColumn<User, String> tbUserName = new TableColumn<>("Usuário");
-    private TableColumn<User, String> tbEmail = new TableColumn<>("Email");;
-    private TableColumn<User, Integer> tbIdUser = new TableColumn<>("ID");;
+    private TableColumn<User, String> tbEmail = new TableColumn<>("Email");
+    private TableColumn<User, Integer> tbIdUser = new TableColumn<>("ID");
 
 
     public TabelaView() {
 
-        HBox hBox = new HBox(txPesquisa, btProximo, btAnterior);
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.getStyleClass().add("hbox_custom");
-        hBox.setSpacing(15);
-        hBox.setPrefSize(60, 50);
+        HBox boxPesquisa = new HBox(txPesquisa);
+        boxPesquisa.setAlignment(Pos.CENTER_LEFT);
+        boxPesquisa.getStyleClass().add("hbox_custom");
+        boxPesquisa.setSpacing(15);
+        boxPesquisa.setPrefSize(60, 50);
+
+        HBox boxBotoes = new HBox(btAnterior, btProximo);
+        boxBotoes.setAlignment(Pos.CENTER);
+        boxBotoes.getStyleClass().add("hbox_custom");
+        boxBotoes.setSpacing(15);
+
+        HBox boxCadastrar = new HBox(btCadastrar);
+        boxCadastrar.setAlignment(Pos.TOP_CENTER);
+        boxCadastrar.getStyleClass().add("hbox_custom");
+        boxCadastrar.setSpacing(15);
+        boxCadastrar.setPrefSize(70, 40);
 
         txPesquisa.setPromptText("Pesquisar por nome...");
         txPesquisa.getStyleClass().add("text_custom");
@@ -53,9 +64,14 @@ public class TabelaView {
         btAnterior.getStyleClass().add("button_padrao");
         btAnterior.setMaxSize(60, 10);
 
-        root.setTop(hBox);
+        btCadastrar.getStyleClass().add("button_padrao");
+        btCadastrar.setMaxSize(80, 10);
+
+        root.setTop(boxPesquisa);
         root.setCenter(table);
-        root.setPrefSize(500, 400);
+        root.setBottom(boxBotoes);
+        root.setLeft(boxCadastrar);
+        root.setPrefSize(600, 500);
 
         table.setPrefHeight(300);
         table.getColumns().addAll(tbIdUser, tbUserName, tbEmail);
@@ -134,5 +150,13 @@ public class TabelaView {
 
     public void setTbIdUser(TableColumn<User, Integer> tbIdUser) {
         this.tbIdUser = tbIdUser;
+    }
+
+    public Button getBtCadastrar() {
+        return btCadastrar;
+    }
+
+    public void setBtCadastrar(Button btCadastrar) {
+        this.btCadastrar = btCadastrar;
     }
 }

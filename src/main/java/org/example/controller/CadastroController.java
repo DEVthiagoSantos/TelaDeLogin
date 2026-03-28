@@ -2,6 +2,7 @@ package org.example.controller;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
+import org.example.exceptions.*;
 import org.example.service.UserService;
 import org.example.view.CadastroView;
 
@@ -29,12 +30,11 @@ public class CadastroController {
             if (view.getTxUsuario().getText().isBlank()
                     || view.getTxEmail().getText().isBlank()) {
 
-                alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("ATENÇÃO!");
-                alert.setHeaderText("Atenção! As informações" +
-                        " não pode estar vazias");
-                alert.setContentText("Verifique as informações e tente novamente.");
-                alert.showAndWait();
+                alertMap(Alert.AlertType.INFORMATION,
+                        "ATENÇÃO",
+                        "Possivelmente você esqueceu algum " +
+                                "campo.",
+                        "Verifique email e usuário, e tente novamente.");
 
             } else {
                 try {
@@ -43,41 +43,43 @@ public class CadastroController {
                             view.getTxEmail().getText());
                     view.getStage().close();
 
-                } catch (SQLException ex) {
+                } catch (ValidationException validation) {
+
+                    alertMap(Alert.AlertType.INFORMATION,
+                                "ATENÇÃO",
+                                "Dados inválidos",
+                                validation.getMessage());
+
+                } catch (DatabaseException ex) {
+
                     ex.printStackTrace();
 
-                    Platform.runLater(() -> {
-
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("ERROR!");
-                        alert.setHeaderText("Um possível erro aconteceu" +
-                                " com banco de dados");
-                        alert.setContentText("Tente novamente mais tarde.");
-                        alert.showAndWait();
-
-                    });
-
-                } catch (RuntimeException r) {
-
-                    r.printStackTrace();
-
-                    Platform.runLater(() -> {
-
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("ERROR!");
-                        alert.setHeaderText("Um possível erro aconteceu" +
-                                " com nome de usuário ou email");
-                        alert.setContentText("Verifique o nome de usuário" +
-                                " e o email e tente novamente.");
-                        alert.showAndWait();
-
-                    });
+                    alertMap(Alert.AlertType.INFORMATION,
+                            "ATENÇÃO",
+                            "Um possível erro interno aconteceu" +
+                                    " com banco de dados.",
+                            ex.getMessage());
                 }
             }
         });
         view.getBtSair().setCancelButton(true);
         view.getBtSair().setOnAction(e -> {
             view.getStage().close();
+        });
+    }
+
+    public void alertMap(Alert.AlertType type,
+                         String title,
+                         String header,
+                         String content) {
+
+        Platform.runLater(() -> {
+
+            Alert alert = new Alert(type);
+            alert.setTitle(title);
+            alert.setHeaderText(header);
+            alert.setContentText(content);
+            alert.showAndWait();
         });
     }
 }

@@ -2,18 +2,22 @@ package org.example.service;
 
 import org.example.dao.UserDAO;
 import org.example.database.ConnectionFactory;
+import org.example.exceptions.DatabaseException;
+import org.example.exceptions.InvalidEmailException;
+import org.example.exceptions.InvalidUserException;
 import org.example.model.PageResponse;
 import org.example.model.User;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 public class UserService {
 
     private static UserDAO userDAO = new UserDAO();
 
     public void createUser(String userName,
-                           String email) throws SQLException {
+                           String email) throws
+            InvalidEmailException, InvalidUserException
+            , DatabaseException{
 
         Connection conn = ConnectionFactory.connection();
 
@@ -27,7 +31,7 @@ public class UserService {
     }
 
     public PageResponse<User> list(String userName,
-                                   int page, int limit) throws SQLException {
+                                   int page, int limit) throws DatabaseException {
 
         Connection conn = ConnectionFactory.connection();
 
@@ -40,14 +44,16 @@ public class UserService {
     }
 
     public static void verification(String userName,
-                                    String email) {
+                                    String email) throws InvalidEmailException,
+            InvalidUserException {
 
         if (!userName.matches("^[a-zA-ZÀ-ÿ ]+$")) {
-            throw new RuntimeException("Username is invalid.");
+            throw new InvalidUserException("Username is invalid.");
         } else if (email.isBlank()) {
-            throw new RuntimeException("Email addresses cannot be empty.");
+            throw new InvalidEmailException("Email addresses cannot be empty.");
         } else if (!email.matches("^[^@\\s]+@[a-zA-Z0-9-]+\\.com$")) {
-            throw new RuntimeException("Invalid email");
+            throw new InvalidEmailException("Invalid email");
         }
+
     }
 }

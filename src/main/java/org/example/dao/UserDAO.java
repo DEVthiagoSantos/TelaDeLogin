@@ -1,5 +1,6 @@
 package org.example.dao;
 
+import org.example.exceptions.DatabaseException;
 import org.example.model.PageResponse;
 import org.example.model.User;
 
@@ -15,7 +16,7 @@ public class UserDAO {
 
     public void createUser(Connection conn,
                            String userName,
-                           String email) throws SQLException {
+                           String email) throws DatabaseException {
 
         String sql = """
                 INSERT INTO users
@@ -28,12 +29,14 @@ public class UserDAO {
             stmt.setString(1, userName);
             stmt.setString(2, email);
             stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Erro ao salvar usuário no banco de dados", e);
         }
     }
 
     public PageResponse<User> list(Connection conn,
                                    String userName,
-                                   int page, int limit) throws SQLException {
+                                   int page, int limit) throws DatabaseException{
 
         int offset = Math.max(0, (page - 1) * limit);
 
@@ -67,6 +70,8 @@ public class UserDAO {
                     lista.add(user);
                 }
             }
+        } catch (SQLException rd) {
+            throw new DatabaseException("Erro ao salvar usuário no banco de dados", rd);
         }
 
         return new PageResponse<>(
@@ -78,7 +83,7 @@ public class UserDAO {
     }
 
     public int countItens(Connection conn
-            , String userName) throws SQLException {
+            , String userName) throws DatabaseException {
 
         String sql = """
                 SELECT COUNT(*)
@@ -95,6 +100,8 @@ public class UserDAO {
                     return rs.getInt(1);
                 }
             }
+        } catch (SQLException sq){
+            throw new DatabaseException("Erro ao salvar usuário no banco de dados", sq);
         }
 
         return 0;

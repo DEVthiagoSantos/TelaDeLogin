@@ -2,6 +2,7 @@ package org.example.controller;
 
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+import org.example.exceptions.DatabaseException;
 import org.example.model.PageResponse;
 import org.example.model.User;
 import org.example.service.UserService;
@@ -73,13 +74,8 @@ public class TabelaController {
             view.getBtProximo()
                     .setDisable(currentPage >= response.getTotalPages());
 
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("ATENÇÃO!");
-            alert.setHeaderText("Houve um pequeno problema com a tabela");
-            alert.setContentText("Tente novamente mais tarde.");
-            alert.showAndWait();
+        } catch (DatabaseException e) {
+            e.printStackTrace();
         }
     }
 

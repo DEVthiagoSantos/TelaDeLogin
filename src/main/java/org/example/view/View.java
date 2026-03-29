@@ -7,11 +7,26 @@ import org.example.exceptions.AppException;
 
 public class View {
 
-    public static Stage show(Scene scene,
+    public static void show(Stage stage, Scene scene,
                      String title,
                      boolean realizable) throws AppException {
 
-        Stage stage1 = new Stage();
+        mapShow(stage, scene, title, realizable);
+        stage.show();
+    }
+
+    public static void showAndWait(Stage stage, Scene scene,
+                             String title,
+                             boolean realizable) throws AppException {
+
+        mapShow(stage, scene, title, realizable);
+        stage.showAndWait();
+    }
+
+    public static Stage mapShow(Stage stage1,
+                                Scene scene,
+                                String title,
+                                boolean realizable) {
 
         String css = View.class.getResource("/style.css")
                 .toExternalForm();
@@ -23,7 +38,6 @@ public class View {
         stage1.setResizable(realizable);
         stage1.setTitle(title);
         stage1.getIcons().add(imgIcon);
-        stage1.show();
 
         return stage1;
     }

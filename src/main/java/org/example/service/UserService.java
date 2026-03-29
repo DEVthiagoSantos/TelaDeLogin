@@ -38,6 +38,41 @@ public class UserService {
         return userDAO.list(conn, userName, page, limit);
     }
 
+    public void updateUser(String username,
+                           String email,
+                           int idUser) throws InvalidEmailException,
+            InvalidUserException, DatabaseException {
+
+        Connection conn = ConnectionFactory.connection();
+        username = clearSpaces(username);
+        email = clearSpaces(email);
+
+        verification(username, email);
+
+        User user = userDAO.findUser(conn, idUser);
+
+        if (user == null) {
+            throw new InvalidUserException("Não foi possível achar este usuário no banco de dados");
+        }
+
+        userDAO.updateUser(conn, username, email, idUser);
+    }
+
+    public void deleteUser(int idUser) throws DatabaseException,
+            InvalidUserException {
+
+        Connection conn = ConnectionFactory.connection();
+
+        User user = userDAO.findUser(conn, idUser);
+
+        if (user == null) {
+            throw new InvalidUserException("Não foi possível verificar o usuário");
+        }
+
+        userDAO.deleteUser(conn, user.getIdUser());
+    }
+
+
     public static String clearSpaces(String ex) {
 
         return ex.trim();

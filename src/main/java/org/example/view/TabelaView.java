@@ -6,13 +6,14 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import org.example.model.User;
 
 public class TabelaView {
 
     private BorderPane root = new BorderPane();
     private TextField txPesquisa = new TextField();
-    private Label numPages = new Label("1");
+    private Label numPages = new Label("1/");
     private TableView<User> table = new TableView<>();
     private Button btProximo = new Button(">>");
     private Button btAnterior = new Button("<<");
@@ -21,9 +22,9 @@ public class TabelaView {
     private TableColumn<User, String> tbEmail = new TableColumn<>("Email");
     private TableColumn<User, Integer> tbIdUser = new TableColumn<>("ID");
 
+    private Stage stage;
 
-    public TabelaView() {
-
+    public void initComponents() {
         HBox boxPesquisa = new HBox(txPesquisa);
         boxPesquisa.setAlignment(Pos.CENTER_LEFT);
         boxPesquisa.getStyleClass().add("hbox_custom");
@@ -73,10 +74,15 @@ public class TabelaView {
 
         table.setPrefHeight(300);
         table.getColumns().addAll(tbIdUser, tbUserName, tbEmail);
+    }
 
+    public Stage getStage() {
+        return stage;
     }
 
     public Scene getScene() {
+
+        initComponents();
 
         String css = this.getClass().getResource("/style.css")
                 .toExternalForm();

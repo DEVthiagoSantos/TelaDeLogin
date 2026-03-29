@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.controller.LoginController;
 import org.example.exceptions.AppException;
@@ -23,12 +24,19 @@ public class CadastroView {
 
     private Stage stage;
 
-    public void show() throws AppException {
+    public CadastroView(Stage stage) {
+        this.stage = stage;
+    }
+
+    public void show(Stage owner) throws AppException {
 
         initComponents();
 
+        stage.initOwner(owner);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
         Scene scene = new Scene(vBox);
-        stage = View.show(scene,
+        View.show(stage, scene,
                 "CadastroView",
                 false);
 

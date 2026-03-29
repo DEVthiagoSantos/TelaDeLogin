@@ -82,6 +82,29 @@ public class UserDAO {
         );
     }
 
+    public void updateUser(Connection conn,
+                           String userName,
+                           String email,
+                           int idUser) throws DatabaseException {
+
+        String sql = """
+                UPDATE users
+                SET user_name = ?,
+                email = ?
+                WHERE id_user = ?""";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, userName);
+            stmt.setString(2, email);
+            stmt.setInt(3, idUser);
+            stmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            throw new DatabaseException("Não foi possivel conectar ao banco de dados");
+        }
+    }
+
     public int countItens(Connection conn
             , String userName) throws DatabaseException {
 
@@ -105,5 +128,59 @@ public class UserDAO {
         }
 
         return 0;
+    }
+
+
+    public void deleteUser(Connection conn, int idUser) throws DatabaseException {
+
+        String sql = "DELETE FROM users WHERE id_user = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idUser);
+            stmt.executeUpdate();
+
+        } catch (SQLException rd) {
+            throw new DatabaseException("Erro ao salvar usuário no banco de dados", rd);
+        }
+    }
+
+    public User findUser(Connection conn, int idUser) throws DatabaseException {
+
+        String sql = """
+                SELECT id_user,
+                       user_name,
+                       email
+                FROM users WHERE id_user = ?""";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idUser);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                    if (rs.next()) {
+
+                        return User(rs);
+                    }
+            }
+
+        } catch (SQLException rd) {
+            throw new DatabaseException("Erro ao verificar usuário no banco de dados", rd);
+        }
+
+        return null;
+
+    }
+
+    // List Users
+    public static User User(ResultSet rs) throws SQLException {
+
+        User user = new User();
+        user.setIdUser(rs.getInt("id_user"));
+        user.setUserName(rs.getString("user_name"));
+        user.setEmail(rs.getString("email"));
+
+        return user;
     }
 }

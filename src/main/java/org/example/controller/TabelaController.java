@@ -54,9 +54,9 @@ public class TabelaController {
         });
 
         view.getBtCadastrar().setOnAction(e -> {
-            CadastroView viewCadastro = new CadastroView();
+            CadastroView viewCadastro = new CadastroView(new Stage());
             try {
-                viewCadastro.show();
+                viewCadastro.show(view.getStage());
                 new CadastroController(viewCadastro, userService);
             } catch (AppException ex) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -78,7 +78,9 @@ public class TabelaController {
                             .getSelectedItem();
 
                     try {
-                        new DescricaoView(view, user).show();
+                        DescricaoView decView = new DescricaoView(view, user, new Stage());
+                        decView.show(new Stage());
+                        new DescricaoController(decView, userService);
                     } catch (AppException ex) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Descrição");
